@@ -3,38 +3,25 @@
 <body>
   <script>
     async function run(payload) {
+      const apiKey = "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";
+      const query = payload.query || "Xiaomi 14T Pro";
+      
       try {
-        // ดักจับกรณีแอปส่งข้อมูลมาผิดฟอร์แมต
-        let obj = payload;
-        if (typeof payload === 'string') {
-            obj = JSON.parse(payload);
-        }
-        
-        const query = obj.query || "Empty query";
-        const apiKey = "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";
-        
         const response = await fetch('https://api.tavily.com/search', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            api_key: apiKey,
-            query: query,
-            include_answer: true
-          })
+          body: JSON.stringify({ api_key: apiKey, query: query, include_answer: true })
         });
 
-        // ดักจับกรณี API Key มีปัญหา หรือ Server ปฏิเสธ
         if (!response.ok) {
-           const errText = await response.text();
-           return "[DEBUG-ERROR] HTTP " + response.status + " - " + errText;
+           return "⚠️ API Error: ไม่สามารถเข้าถึง Tavily ได้ (รหัส " + response.status + ")";
         }
 
         const data = await response.json();
-        return "[DEBUG-SUCCESS] เจอข้อมูลแล้ว: " + (data.answer || "No answer found");
+        return "✅ ผลการค้นหา: " + (data.answer || "ไม่พบคำตอบสรุป แต่พบลิงก์ข่าวจำนวนมาก");
         
       } catch (error) {
-        // ดักจับกรณีมือถือหรือแอปบล็อกการออกเน็ต (CORS/Network error)
-        return "[DEBUG-CATCH] " + error.name + " - " + error.message;
+        return "⚠️ Network Error: มือถือบล็อกการเข้าอินเทอร์เน็ตของแอป (" + error.message + ")";
       }
     }
   </script>
