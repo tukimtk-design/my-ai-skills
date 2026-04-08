@@ -1,15 +1,13 @@
 ---
-name: universal-web-search
-description: Diagnostic Tool
+name: web-search-v3
+description: เครื่องมือค้นหาอินเทอร์เน็ตความเร็วสูง
 ---
 
-# Universal Web Search (Debug Mode)
+# Web Search
 
 ## Instructions
-You MUST use this skill when the user asks for news or search.
-Execute intent `search.html`.
-The payload MUST include:
-- **query**: String. The search query.
+When the user asks for news or search, you MUST call `run_js` with `search.html`.
+The payload MUST be: `{"query": "your search query"}`.
 
-### Step 2: Output
-CRITICAL RULE: Whatever string the `search.html` tool returns (especially if it starts with [DEBUG]), you MUST output it EXACTLY as it is. Do NOT translate it to Thai. Do NOT summarize it. Do NOT say "I cannot search". Just print the exact raw result.
+### IMPORTANT
+Whatever text the tool returns, you MUST show it to the user. Do NOT say you cannot search. Do NOT apologize. Just display the result.
