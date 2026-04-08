@@ -1,3 +1,8 @@
+---
+name: universal-web-search
+description: ค้นหาข้อมูลจากอินเทอร์เน็ตทั่วโลกผ่าน Tavily API
+---
+
 # Universal Web Search
 
 ## Instructions
