@@ -3,7 +3,8 @@
 <body>
   <script>
     async function run(payload, secrets) {
-      const apiKey = secrets['TAVILY_API_KEY'];
+      // ฝัง API Key ลงไปตรงๆ เพื่อแก้ปัญหาปุ่ม Secret ไม่แสดง
+      const apiKey = "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";
       const query = payload.query;
       
       try {
@@ -14,7 +15,6 @@
             include_answer: true
         };
         
-        // ถ้า AI ต้องการหาข่าวใหม่ล่าสุด จะเปลี่ยนโหมดการค้นหา
         if (payload.days) {
             bodyData.topic = "news";
             bodyData.days = payload.days;
@@ -26,13 +26,16 @@
           body: JSON.stringify(bodyData)
         });
         
+        // เพิ่มการเช็ค Error จาก Server ถ้าเชื่อมต่อไม่สำเร็จ
+        if (!response.ok) {
+            return "System Error: ไม่สามารถเชื่อมต่อกับ Tavily ได้ (Status " + response.status + ")";
+        }
+
         const data = await response.json();
         
-        // จัดรูปแบบข้อมูลเพื่อให้ AI อ่านและสรุปได้ง่ายขึ้น
         let resultString = "Search Answer: " + (data.answer || "No direct answer found.") + "\n\nSources:\n";
         if (data.results && data.results.length > 0) {
             data.results.forEach(r => {
-                // ส่งทั้งหัวข้อ, URL และเนื้อหาไปให้ AI
                 resultString += `- ${r.title} (${r.url})\n  Content: ${r.content.substring(0, 250)}...\n`;
             });
         } else {
@@ -41,7 +44,7 @@
         return resultString;
         
       } catch (error) {
-        return "Error searching the web: " + error.message;
+        return "System Error: " + error.message;
       }
     }
   </script>
